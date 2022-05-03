@@ -1,11 +1,12 @@
 [Unit]
-Description=x-ui
+Description=x-ui Service
 After=network.target
+Wants=network.target
+
 [Service]
 Type=simple
-User=root
-ExecStart=/x-ui/main
-ExecStop=/usr/bin/kill -15 $MAINPID
-Restart=on-failure
+WorkingDirectory=/usr/local/x-ui/
+ExecStart=/usr/local/x-ui/x-ui
+
 [Install]
 WantedBy=multi-user.target
