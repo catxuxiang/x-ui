@@ -2,15 +2,26 @@ package service
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 	"time"
 	"x-ui/database"
 	"x-ui/database/model"
 	"x-ui/util/common"
 	"x-ui/xray"
+
+	"gorm.io/gorm"
 )
 
 type InboundService struct {
+}
+
+func (s *InboundService) GetInboundsByPort(port int) ([]*model.Inbound, error) {
+	db := database.GetDB()
+	var inbounds []*model.Inbound
+	err := db.Model(model.Inbound{}).Where("port = ?", port).Find(&inbounds).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return inbounds, nil
 }
 
 func (s *InboundService) GetInbounds(userId int) ([]*model.Inbound, error) {

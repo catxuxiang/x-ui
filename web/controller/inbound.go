@@ -2,13 +2,14 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strconv"
 	"x-ui/database/model"
 	"x-ui/logger"
 	"x-ui/web/global"
 	"x-ui/web/service"
 	"x-ui/web/session"
+
+	"github.com/gin-gonic/gin"
 )
 
 type InboundController struct {
@@ -26,10 +27,25 @@ func NewInboundController(g *gin.RouterGroup) *InboundController {
 func (a *InboundController) initRouter(g *gin.RouterGroup) {
 	g = g.Group("/inbound")
 
+	g.POST("/listByPort/:port", a.getInboundsByPort)
 	g.POST("/list", a.getInbounds)
 	g.POST("/add", a.addInbound)
 	g.POST("/del/:id", a.delInbound)
 	g.POST("/update/:id", a.updateInbound)
+}
+
+func (a *InboundController) getInboundsByPort(c *gin.Context) {
+	port, err := strconv.Atoi(c.Param("port"))
+	if err != nil {
+		jsonMsg(c, "查询", err)
+		return
+	}
+	inbounds, err := a.inboundService.GetInbounds(port)
+	if err != nil {
+		jsonMsg(c, "获取", err)
+		return
+	}
+	jsonObj(c, inbounds, nil)
 }
 
 func (a *InboundController) startTask() {
