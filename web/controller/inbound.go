@@ -40,7 +40,7 @@ func (a *InboundController) getInboundsByPort(c *gin.Context) {
 		jsonMsg(c, "查询", err)
 		return
 	}
-	inbounds, err := a.inboundService.GetInbounds(port)
+	inbounds, err := a.inboundService.GetInboundsByPort(port)
 	if err != nil {
 		jsonMsg(c, "获取", err)
 		return
